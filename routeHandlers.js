@@ -1,7 +1,7 @@
 const models = require('./models');
 module.exports = {
   testReq: function testReq(req, res) {
-    res.send('hello world')
+    res.send('hello world');
   },
   getDogs: function (req, res) {
     models.Dog.find(function (err, dogs) {
@@ -10,10 +10,12 @@ module.exports = {
     })
   },
   createDog: function (req, res) {
-    const newDog = new models.Dog(req.query);
-    newDog.save(function (err, savedDog) {
-      if (err) return res.status(500).json(err);
-      res.status(201).json(savedDog);
+    // was save, now is create with object as first param
+    // we no longer need to create a new Dog()
+    models.Dog.create(req.query, function (err, savedDog) {
+      if (err) return res.status(400).json(err);
+      res.status(201)
+      res.json(savedDog);
     })
   },
   deleteDog: function (req, res) {

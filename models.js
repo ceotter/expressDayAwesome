@@ -1,7 +1,13 @@
 const mongoose = require('mongoose');
 const dogSchema = new mongoose.Schema({
-  name: String,
-  age: Number
+  name: {
+    type: String,
+    required: true,
+  },
+  age: {
+    type: Number,
+    required: true,
+  }
 });
 
 const Dog = mongoose.model('Dog', dogSchema);
