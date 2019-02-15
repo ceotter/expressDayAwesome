@@ -1,12 +1,12 @@
 const models = require('./models');
 module.exports = {
   testReq: function testReq(req, res) {
-    res.send('hello world');
+    res.send('dogs dogs!');
   },
   getDogs: function (req, res) {
     models.Dog.find(function (err, dogs) {
       if (err) return res.status(500).json(err);
-      res.json(dogs);
+      res.status(200).json(dogs);
     })
   },
   createDog: function (req, res) {

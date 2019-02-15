@@ -26,4 +26,11 @@ const appListen = function(){
   console.log("We are running on " + port);
 };
 
+//Front End Stuff
+//==================
+function addStatic(){
+  return express.static(path.join(__dirname, "public"))
+}
+
+app.use(addStatic());
 app.listen(port, appListen);

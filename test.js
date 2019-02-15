@@ -14,39 +14,36 @@ xit('dummyTest', function(){
   expect(true).to.equal(true);
 })
 
-let req = {
-
-}
-
-let res = {
-  sentArgs: '',
-  send: function(arg) {
-    this.sentArgs = arg;
-  },
-}
-
 xit('test the test', function() {
+  let req = {};
+  let res = {
+    sentArgs: '',
+    send: function(arg) {
+      this.sentArgs = arg;
+    },
+  };
   routeHandlers.testReq(req, res);
   expect(res.sentArgs).to.equal('hello world');
 })
 
+let res = {};
+
+let sandbox;
+
+beforeEach(function() {
+  sandbox = sinon.createSandbox();
+  // Setting a spy function on json and status
+  res = {
+    json: sinon.spy(),
+    status: sinon.stub().returns({json: sinon.spy()})
+  }
+})
+afterEach(function(){
+  sandbox.restore();
+})
+
 describe('create dog', function() {
 
-  let res = {};
-
-  let sandbox;
-
-  beforeEach(function() {
-    sandbox = sinon.createSandbox();
-    // Setting a spy function on json and status
-    res = {
-      json: sinon.spy(),
-      status: sinon.stub().returns({json: sinon.spy()})
-    }
-  })
-  afterEach(function(){
-    sandbox.restore();
-  })
   it('Should create a dog', function() {
     let req = {
       query: {
@@ -77,5 +74,31 @@ describe('create dog', function() {
     sandbox.stub(models.Dog, 'create').yields(expectedResult);
     routeHandlers.createDog(req, res);
     sinon.assert.calledWith(res.status, sinon.match(400))
+  })
+})
+
+describe('get dogs', function(){
+  it('should return an array of dogs', function(){
+    let req = {
+      query: {}
+    }
+    let expectedResult = [
+      {
+        "_id": "5c6329f3818608506c11a9fe",
+        "name": "Roxy",
+        "age": 1,
+        "__v": 0
+      },
+      {
+        "_id": "5c632b6a53013e50a43cbe36",
+        "name": "Sophie",
+        "age": 5,
+        "__v": 0
+      }
+    ];
+
+    sandbox.stub(models.Dog, 'find').yields(null, expectedResult);
+    routeHandlers.getDogs(req, res);
+    sinon.assert.calledWith(res.status, sinon.match(200))
   })
 })
